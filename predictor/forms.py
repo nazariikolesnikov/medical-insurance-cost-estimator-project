@@ -5,7 +5,7 @@ class MedicalInsuranceForm(forms.Form):
     SEX_CHOICES = [('male', 'Male'), ('female', 'Female')]
     SMOKER_CHOICES = [('yes', 'Yes'), ('no', 'No')]
     REGION_CHOICES = [
-        ('northeast', 'Northeast')
+        ('northeast', 'Northeast'),
         ('northwest', 'Northwest'),
         ('southeast', 'Southeast'),
         ('southwest', 'Southwest')
