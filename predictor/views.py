@@ -8,8 +8,8 @@ from .forms import MedicalInsuranceForm
 
 
 BASE_DIR = settings.BASE_DIR
-MODEL_PATH = os.path.join(BASE_DIR, 'predictor', 'model', 'medical_insurance_model.pkl')
-FEATURES_PATH = os.path.join(BASE_DIR, 'predictor', 'model', 'model_features.pkl')
+MODEL_PATH = os.path.join(BASE_DIR, 'predictor', 'ml_models', 'medical_insurance_model.pkl')
+FEATURES_PATH = os.path.join(BASE_DIR, 'predictor', 'ml_models', 'model_features.pkl')
 
 try:
     model = joblib.load(MODEL_PATH)
