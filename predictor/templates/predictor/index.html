@@ -4,98 +4,380 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medical Insurance Cost Estimator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background-color: #f8f9fa;
-            padding-top: 2rem;
+        :root {
+            --primary-color: #4361ee;
+            --primary-hover: #3a53c4;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --text-main: #2b2d42;
+            --text-muted: #6c757d;
         }
 
-        .card {
+        body { 
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            font-family: 'Inter', sans-serif; 
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .custom-card { 
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px; 
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            padding: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .form-group { 
+            margin-bottom: 1.2rem; 
+        }
+
+        .form-group label { 
+            font-weight: 600; 
+            font-size: 0.9rem; 
+            margin-bottom: 0.4rem; 
+            color: var(--text-main); 
+            display: block;
+        }
+        
+        input[type="number"], 
+        input[type="text"], 
+        select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="number"]:focus, 
+        input[type="text"]:focus, 
+        select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+        }
+
+        .form-group p { 
+            margin-bottom: 0; 
+            display: flex; 
+            gap: 15px; 
+            align-items: center; 
+        }
+
+        .form-group input[type="radio"] {
+            margin-right: 5px; 
+            accent-color: var(--primary-color); 
+            transform: scale(1.2); 
+        }
+
+        .form-group label[for^="id_sex"], 
+        .form-group label[for^="id_smoker"] { 
+            display: inline-block; 
+            margin-bottom: 0; 
+            font-weight: 400; 
+        }
+
+        .btn-estimate {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+            margin-top: 1rem;
+        }
+
+        .btn-estimate:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+            color: white;
+        }
+
+        .result-card { 
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-left: 6px solid var(--primary-color);
             border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            animation: slideUp 0.6s ease-out;
         }
 
-        .result-card {
-            background: #ffffff;
-            padding: 20px;
-            border-left: 5px solid #0d6efd;
+        .result-price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #2a9d8f;
+            text-shadow: 0 2px 4px rgba(42, 157, 143, 0.2);
+            margin-top: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .form-group ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-bottom: 0;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .form-group ul li {
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group ul label {
+            margin-bottom: 0;
+            margin-left: 5px;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .fade-in { 
+            animation: fadeIn 1s ease-in; 
+        }
+
+        @keyframes fadeIn { 
+            from { 
+                opacity: 0; 
+            } 
+            
+            to { 
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .result-price { 
+                font-size: 2.2rem; 
+            }
+
+            .custom-card { 
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="text-center mb-4">Medical Insurance Cost Estimator</div>
-        <div class="form">
-            <div class="col-md-6 mb-4">
-                <div class="card p-4">
-                    <h3>Patients Details</h3>
+    <div class="container fade-in">
+  
+        <div class="text-center mb-5">
+            <h1 class="fw-bold" style="color: #2b2d42;">
+                Medical Insurance 
+                <span style="color: var(--primary-color);">Cost Estimator</span>
+            </h1>
+            <p class="text-muted mt-2">
+                Enter patient details to predict annual medical insurance charges using our 
+                Machine Learning model.
+            </p>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-lg-6">
+
+                <div class="custom-card">
+                    <h3 class="mb-4 fw-bold"><i class="fa-solid fa-user-injured me-2" style="color: var(--primary-color);"></i>Patient Details</h3>
                     <form method="post">
                         {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-primary w-100 mt-3">Estimate Charges</button>
+                        {% for field in form %}
+
+                            <div class="form-group">
+
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="text-danger mt-1" style="font-size: 0.85rem;">{{ field.errors }}</div>
+                                {% endif %}
+
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn-estimate">
+                            Calculate Estimate <i class="fa-solid fa-arrow-right ms-2"></i>
+                        </button>
                     </form>
                 </div>
+
             </div>
-
-            <div class="col-md-6">
+            
+            <div class="col-lg-6">
                 {% if error %}
-                    <div class="alert alert-danger">{{ error }}</div>
+
+                    <div class="alert alert-danger custom-card" style="border-left: 6px solid #dc3545;">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i> 
+                        {{ error }}
+                    </div>
+
+                {% endif %}
+                
+                {% if prediction %}
+
+                    <div class="custom-card result-card mb-4">
+                        <p class="text-muted text-uppercase mb-1" style="letter-spacing: 1px; font-size: 0.85rem; font-weight: 600;">Estimated Annual Charges</p>
+                        <div class="result-price">
+                            ${{ prediction|floatformat:2 }}
+                        </div>
+                        <p class="text-muted mt-2 mb-0">
+                            <small>Calculated using Random Forest Regressor (R² ~85%)</small>
+                        </p>
+                    </div>
+                    
+                    <div class="custom-card">
+
+                        <h4 class="mb-3 fw-bold">
+                            <i class="fa-solid fa-chart-simple me-2" style="color: var(--primary-color);"></i>
+                            Cost Comparison
+                        </h4>
+
+                        <div class="chart-container">
+                            <canvas id="myChart"></canvas>
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="custom-card text-center d-flex flex-column justify-content-center align-items-center" style="min-height: 300px;">
+                        <i class="fa-solid fa-heart-pulse mb-3" style="font-size: 3rem; color: #e9ecef;"></i>
+                        <h4 class="text-muted fw-normal">Awaiting Data...</h4>
+                        <p class="text-muted">
+                            Fill out the form to see the prediction and comparison chart.
+                        </p>
+                    </div>
+
                 {% endif %}
 
-                {% if prediction %}
-                    <div class="card p-4 result-card mb-4">
-                        <h3>Estimated Annual Charges</h3>
-                        <h2 class="text-success">${{ prediction|floatformat:2 }}</h2>
-                    </div>
-                    <div class="card p-4">
-                        <h4>Comparison</h4>
-                        <canvas id="myChart" data-prediction="{{ prediction }}"></canvas>
-                    </div>
-                {% else %}
-                    <div class="card p-4 text-muted text-center">
-                        <p>Enter patient details and click "Estimate Charges" to see the result.</p>
-                    </div>
-                {% endif %}
             </div>
         </div>
     </div>
 
+    <footer class="text-center mt-5 pt-4 pb-3 fade-in" style="color: var(--text-muted); font-size: 0.9rem;">
+        <p class="mb-0">
+            &copy; 2026 Medical Insurance Estimator. 
+            Built with <i class="fa-solid fa-heart text-danger"></i> using Django & Scikit-learn.
+        </p>
+    </footer>
+
     {% if prediction %}
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const ctx = document.getElementById('myChart');
-        const prediction = parseFloat(ctx.dataset.prediction);
+        const ctx = document.getElementById('myChart').getContext('2d');
+        let gradientBlue = ctx.createLinearGradient(0, 0, 0, 400);
+        
+        gradientBlue.addColorStop(0, '#4361ee');
+        gradientBlue.addColorStop(1, '#4cc9f0');
 
-        new Chart(ctx, {
+        let gradientGreen = ctx.createLinearGradient(0, 0, 0, 400);
+        
+        gradientGreen.addColorStop(0, '#2a9d8f');
+        gradientGreen.addColorStop(1, '#80ed99');
+
+        let gradientRed = ctx.createLinearGradient(0, 0, 0, 400);
+        
+        gradientRed.addColorStop(0, '#e63946');
+        gradientRed.addColorStop(1, '#ff758f');
+
+        const predictionValue = Number('{{ prediction|default:0|escapejs }}');
+
+        const myChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: [
-                    'Your Prediction', 
-                    'Avg Non-Smoker', 
-                    'Avg Smoker'
-                ],
+                labels: ['Your Prediction', 'Avg Non-Smoker', 'Avg Smoker'],
                 datasets: [{
-                    label: 'Charges ($)',
-                    data: [
-                        prediction, 
-                        8400, 
-                        32000
-                    ],
-                    backgroundColor: [
-                        '#0d6efd', 
-                        '#198754', 
-                        '#dc3545'
-                    ],
+                    label: 'Annual Charges ($)',
+                    data: [predictionValue, 8400, 32000],
+                    backgroundColor: [gradientBlue, gradientGreen, gradientRed],
+                    borderRadius: 8,
+                    borderSkipped: false,
+                    barPercentage: 0.6
                 }]
             },
             options: {
-                scales: { 
-                    y: { beginAtZero: true } 
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(43, 45, 66, 0.9)',
+                        titleFont: { family: 'Inter', size: 14 },
+                        bodyFont: { family: 'Inter', size: 14 },
+                        padding: 12,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                return ' $' + context.parsed.y.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        ticks: {
+                            font: { family: 'Inter' },
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { family: 'Inter', weight: '600' } }
+                    }
                 }
             }
         });
+
     </script>
+
     {% endif %}
 </body>
 </html>
